@@ -1,12 +1,12 @@
 import numpy as np
 import torch
 from torch import nn
+from torch.functional import cartesian_prod
 from torch.nn import functional as F
 import logging
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
-from performer_pytorch import Performer, SelfAttention, FastAttention
 from reformer_pytorch import Reformer, LSHAttention, LSHSelfAttention
 
 NUM_PIXELS = 256
@@ -24,8 +24,8 @@ def logsumexp(x):
     return m + torch.log(torch.exp(x - m[..., None]).sum(-1))
 
 
-class ImagePerformer(nn.Module):
-    """ImagePerformer with DMOL or categorical distribution."""
+class ImageReformer(nn.Module):
+    """ImageReformer with DMOL or categorical distribution."""
 
     def __init__(self, hparams):
         super().__init__()
@@ -283,8 +283,10 @@ class DecoderLayer(nn.Module):
         #     heads=8,
         #     depth=14
         # )
-        self.attn = SelfAttention(
-            dim=256, heads=8, causal=False, dropout=.1, dim_head=64)
+        # self.attn = SelfAttention(
+        #     dim=256, heads=8, causal=False, dropout=.1, dim_head=64)
+        self.attn = LSHSelfAttention(
+            dim=256, heads=8, causal=False, dropout=.1, n_hashes=2, bucket_size=192, dim_head=64)
 
         # self.attn.to_q = nn.Linear(self.hparams.hidden_size, self.kd, bias=False)
         # self.attn.to_k =nn.Linear(self.hparams.hidden_size, self.kd, bias=False)

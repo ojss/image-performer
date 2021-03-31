@@ -13,7 +13,7 @@ import tensorboardX
 import torch.optim as optim
 import torchvision
 from image_transformer import ImageTransformer
-from image_performer import ImagePerformer
+from image_reformer import ImageReformer
 import matplotlib
 import itertools
 from torch.utils.data import DataLoader
@@ -54,8 +54,8 @@ def parse_args_and_config():
                         help='Verbose level: info | debug | warning | critical')
     parser.add_argument('--sample', action='store_true',
                         help='Sample at train time')
-    parser.add_argument('--performer', action="store_true",
-                        help="Chooses the performer based model")
+    parser.add_argument('--reformer', action="store_true",
+                        help="Chooses the reformer based model")
     parser.add_argument("--img64", type=Path, help="Path to img net", default=None)
 
     args = parser.parse_args()
@@ -125,8 +125,8 @@ def main():
         transform = transforms.Compose([
             transforms.Resize(config.model.image_size),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                 std=[0.5, 0.5, 0.5])
+            transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225])
         ])
     else:
         transform = transforms.Compose([
@@ -140,8 +140,8 @@ def main():
         loader = DataLoader(
             dataset, batch_size=config.train.batch_size, shuffle=True, num_workers=4)
         input_dim = config.model.image_size ** 2 * config.model.channels
-        model = ImagePerformer(config.model).to(
-            config.device) if args.performer else ImageTransformer(config.model).to(config.device)
+        model = ImageReformer(config.model).to(
+            config.device) if args.reformer else ImageTransformer(config.model).to(config.device)
         optimizer = optim.Adam(model.parameters(), lr=1.,
                             betas=(0.9, 0.98), eps=1e-9)
         scheduler = optim.lr_scheduler.LambdaLR(
@@ -159,8 +159,8 @@ def main():
         dataset = datasets.ImageFolder(train_dir, transform=transform)
         loader = DataLoader(dataset, batch_size=config.train.batch_size, shuffle=True, num_workers=4)
         input_dim = config.model.image_size ** 2 * config.model.channels
-        model = ImagePerformer(config.model).to(
-            config.device) if args.performer else ImageTransformer(config.model).to(config.device)
+        model = ImageReformer(config.model).to(
+            config.device) if args.reformer else ImageTransformer(config.model).to(config.device)
         optimizer = optim.Adam(model.parameters(), lr=1.,
                         betas=(0.9, 0.98), eps=1e-9, weight_decay=0.1)
         scheduler = optim.lr_scheduler.LambdaLR(
