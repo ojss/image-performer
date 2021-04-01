@@ -21,7 +21,7 @@ from torchvision import datasets, transforms
 from torchviz import make_dot
 from tqdm import tqdm
 import torch.nn as nn
-
+from Imagenet64 import Imagenet64
 from pathlib import Path
 
 matplotlib.use('Agg')
@@ -201,7 +201,7 @@ def main():
     losses_per_dim = torch.zeros(
         config.model.channels, config.model.image_size, config.model.image_size).to(config.device)
     for _ in range(config.train.epochs):
-        for _, (imgs, l) in enumerate(loader):
+        for (l, imgs) in enumerate(loader):
             imgs = imgs.to(config.device)
             model.train()
             optimizer.zero_grad()
