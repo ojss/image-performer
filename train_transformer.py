@@ -16,7 +16,7 @@ from image_transformer import ImageTransformer
 from image_performer import ImagePerformer
 import matplotlib
 import itertools
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, ConcatDataset, Dataset
 from torchvision import datasets, transforms
 from torchviz import make_dot
 from tqdm import tqdm
