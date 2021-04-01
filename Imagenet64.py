@@ -7,7 +7,7 @@ from torch.utils.data import Dataset,TensorDataset, DataLoader, ConcatDataset
 class Imagenet64(Dataset):
     def __init__(self, data_folder, filename, img_size = 64):
         self.data_file = os.path.join(data_folder, filename)
-        print(self.data_file)
+#         print(self.data_file)
         self.d = self.unpickle(self.data_file)
         self.img_size = img_size
 
