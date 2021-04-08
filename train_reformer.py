@@ -21,6 +21,7 @@ from torchvision import datasets, transforms
 from torchviz import make_dot
 from tqdm import tqdm
 import torch.nn as nn
+from Imagenet64 import Imagenet64
 
 from pathlib import Path
 
@@ -156,7 +157,9 @@ def main():
                                  std=[0.229, 0.224, 0.225])
         ])
 
-        dataset = datasets.ImageFolder(train_dir, transform=transform)
+#         dataset = datasets.ImageFolder(train_dir, transform=transform)
+#         loader = DataLoader(dataset, batch_size=config.train.batch_size, shuffle=True, num_workers=4)
+        dataset = Imagenet64('../data/train_64x64/',  transform=transform)
         loader = DataLoader(dataset, batch_size=config.train.batch_size, shuffle=True, num_workers=4)
         input_dim = config.model.image_size ** 2 * config.model.channels
         model = ImageReformer(config.model).to(
@@ -199,7 +202,8 @@ def main():
     losses_per_dim = torch.zeros(
         config.model.channels, config.model.image_size, config.model.image_size).to(config.device)
     for _ in range(config.train.epochs):
-        for _, (imgs, l) in enumerate(loader):
+        for  _, imgs in enumerate(loader):
+#         for _, (imgs, l) in enumerate(loader):
             imgs = imgs.to(config.device)
             model.train()
             optimizer.zero_grad()

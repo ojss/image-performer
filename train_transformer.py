@@ -155,11 +155,12 @@ def main():
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
         ])
-        files = os.listdir(train_dir)
-        datasets = list(map(lambda x : Imagenet64(train_dir,x, config.model.image_size), files))
-        dataset_final = ConcatDataset(datasets)
+#         files = os.listdir(train_dir)
+#         datasets = list(map(lambda x : Imagenet64(train_dir,x, config.model.image_size), files))
+#         dataset_final = ConcatDataset(datasets)
         # dataset = datasets.ImageFolder(train_dir, transform=transform)
-        loader = DataLoader(dataset_final, batch_size=config.train.batch_size, shuffle=True, num_workers=4)
+        dataset = Imagenet64('../data/train_64x64/',  transform=transform)
+        loader = DataLoader(dataset, batch_size=config.train.batch_size, shuffle=True, num_workers=4)
         input_dim = config.model.image_size ** 2 * config.model.channels
         model = ImagePerformer(config.model).to(
             config.device) if args.performer else ImageTransformer(config.model).to(config.device)
@@ -201,7 +202,7 @@ def main():
     losses_per_dim = torch.zeros(
         config.model.channels, config.model.image_size, config.model.image_size).to(config.device)
     for _ in range(config.train.epochs):
-        for (l, imgs) in enumerate(loader):
+        for  _, imgs in enumerate(loader):
             imgs = imgs.to(config.device)
             model.train()
             optimizer.zero_grad()

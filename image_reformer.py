@@ -286,7 +286,7 @@ class DecoderLayer(nn.Module):
         # self.attn = SelfAttention(
         #     dim=256, heads=8, causal=False, dropout=.1, dim_head=64)
         self.attn = LSHSelfAttention(
-            dim=256, heads=8, causal=False, dropout=.1, n_hashes=2, bucket_size=192, dim_head=64)
+            dim=256, heads=8, causal=False, dropout=.1, n_hashes=2, bucket_size=64, dim_head=64)
 
         # self.attn.to_q = nn.Linear(self.hparams.hidden_size, self.kd, bias=False)
         # self.attn.to_k =nn.Linear(self.hparams.hidden_size, self.kd, bias=False)
