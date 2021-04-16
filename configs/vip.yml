@@ -1,0 +1,26 @@
+seed: 1234
+
+train:
+  epochs: 14
+  batch_size: 256
+  sample_iter: 1000
+  sample_size: 8
+  log_iter: 1
+  clip_grad_norm: 0
+
+optim:
+  lr: 0.001
+  warmup: 4000
+
+model:
+  # Using cifar10_base hparams -- ideally gets 2.90 bits/dim
+  dim: 512
+  image_size: 64
+  patch_size: 4
+  num_classes: 200
+  p_dim: 512
+  p_depth: 6
+  p_heads: 8
+  
+
+

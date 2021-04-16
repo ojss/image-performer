@@ -1,4 +1,7 @@
 transformer_logs/
 venv/
 datasets/
+CIFAR10/
+vit_logs/
 __pycache__
+*.zip
